@@ -1,7 +1,7 @@
+import gradio as gr
 import torch
 import librosa
-import numpy as np
-import soundfile as sf
+from resynthesis import load_model, predict_features, resynthesize_audio
 
 class AudioModel(torch.nn.Module):
     def __init__(self, input_dim=128, hidden_dim=64, output_dim=32):

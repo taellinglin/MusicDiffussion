@@ -5,3 +5,5 @@ numpy==1.26.4
 torchvision==0.16.2
 torchaudio==2.2.2
 soundfile==0.12.1
+psutil
+librosa

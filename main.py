@@ -5,6 +5,24 @@ import torch
 import psutil
 import shutil
 import sys
+from colorama import Fore, Style, init
+
+# Initialize colorama for colored output on Windows
+init(autoreset=True)
+
+# ROYGBIV colors
+ROYGBIV = [
+    Fore.RED,        # R
+    Fore.YELLOW,     # O
+    Fore.GREEN,      # Y
+    Fore.BLUE,       # B
+    Fore.MAGENTA,    # I
+    Fore.CYAN,       # V
+]
+
+def color_text(text, color_index):
+    """ Apply ROYGBIV color cycling """
+    return ROYGBIV[color_index % len(ROYGBIV)] + text + Style.RESET_ALL
 
 def get_system_info():
     """ Collect system information for debugging """
@@ -14,10 +32,10 @@ def get_system_info():
         "OS": platform.system(),
         "OS Version": platform.version(),
         "Architecture": platform.architecture()[0],
-        "CPU Cores": psutil.cpu_count(logical=True),
+        "CPU Cores": str(psutil.cpu_count(logical=True)),
         "Memory (Total)": f"{psutil.virtual_memory().total / 1e9:.2f} GB",
         "Memory (Available)": f"{psutil.virtual_memory().available / 1e9:.2f} GB",
-        "GPU Detected": torch.cuda.is_available(),
+        "GPU Detected": str(torch.cuda.is_available()),
     }
 
     # GPU details
@@ -32,10 +50,12 @@ def get_system_info():
         info["GPU Name"] = "None"
         info["GPU Memory (Total)"] = "N/A"
 
-    # Print system info
-    print("\n🚀 Initialization Debug Info:")
-    for key, value in info.items():
-        print(f"  ➤ {key}: {value}")
+    # Print system info in ROYGBIV colors
+    print("\n🌈 🚀 Initialization Debug Info:")
+    for i, (key, value) in enumerate(info.items()):
+        colored_key = color_text(f"  ➤ {key}:", i)
+        colored_value = color_text(f"{value}", i + 1)
+        print(f"{colored_key} {colored_value}")
 
     return info
 
@@ -47,7 +67,7 @@ def main():
 
     args = parser.parse_args()
 
-    # Print system info
+    # Print system info with ROYGBIV colors
     get_system_info()
 
     # Check if Gradio is installed
@@ -56,7 +76,7 @@ def main():
         subprocess.run("pip install gradio", shell=True, check=True)
 
     # Launch Gradio interface
-    command = f"python interface.py --server_name {args.listen} --server_port {args.port}"
+    command = f"python interface.py --listen {args.listen} --port {args.port}"
 
     try:
         print(f"\n🚀 Launching Gradio interface at {args.listen}:{args.port}...")
