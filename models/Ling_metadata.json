@@ -1,0 +1,1 @@
+{"input_dim": 1280, "hidden_dim": 2, "output_dim": 88200, "complexity": 0.5, "sample_rate": 44100, "batch_size": 32}
